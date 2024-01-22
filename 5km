@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькулятор времени прибытия юнитов</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+		background-color: #666666;
+        }
+.button28 {
+    position: relative;
+    display: inline-block;
+    font-size: 90%;
+    font-weight: 700;
+    color: rgb(209,209,217);
+    text-decoration: none;
+    text-shadow: 0 -1px 2px rgba(0,0,0,.2);
+    padding: .5em 1em;
+    outline: none;
+    border-radius: 3px;
+    background: linear-gradient(rgb(110,112,120), rgb(81,81,86)) rgb(110,112,120);
+    box-shadow:
+    0 1px rgba(255,255,255,.2) inset,
+    0 3px 5px rgba(0,1,6,.5),
+    0 0 1px 1px rgba(0,1,6,.2);
+    transition: .2s ease-in-out;
+}
+
+.button28:hover:not(:active) {
+    background: linear-gradient(rgb(126,126,134), rgb(70,71,76)) rgb(126,126,134);
+}
+
+.button28:active {
+    top: 1px;
+    background: linear-gradient(rgb(76,77,82), rgb(56,57,62)) rgb(76,77,82);
+    box-shadow:
+    0 0 1px rgba(0,0,0,.5) inset,
+    0 2px 3px rgba(0,0,0,.5) inset,
+    0 1px 1px rgba(255,255,255,.1);
+}
+
+    </style>
+</head>
+<body>
+
+<h2>Калькулятор 5-и км</h2>
+
+<label for="unit">Юнит:</label>
+<select id="unit">
+    <option value="бронеавтомобиль">Бронеавтомобиль</option>
+    <option value="кавалерия">Кавалерия</option>
+    <option value="танк">Танк</option>
+    <option value="пехота">Пехота</option>
+    <option value="тяжёлый танк">Тяжёлый танк</option>
+    <option value="арта / аэростат">Арта / Аэростат</option>
+    <option value="железнодорожное орудие">Железнодорожное орудие</option>
+</select>
+
+<br><br>
+
+<label for="territory">Территория:</label>
+<select id="territory">
+    <option value="своя">Своя</option>
+    <option value="союзник">Союзник</option>
+    <option value="враг">Вражеская террито</option>
+</select>
+
+<br><br>
+
+<label for="speed">Скорост:</label>
+<input type="number" id="speed" placeholder="х1,х2,х4...">
+
+<br><br>
+
+<button class="button28" onclick="calculateArrivalTime()">Рассчитать время прибытия...</button>
+
+<p id="result"></p>
+
+<script>
+    function calculateArrivalTime() {
+        // Получаем выбранные значения
+        var unit = document.getElementById("unit").value;
+        var territory = document.getElementById("territory").value;
+        var speed = parseFloat(document.getElementById("speed").value);
+
+        // Ваша функция для расчета времени прибытия
+        var arrivalTime = "00:00";
+
+        switch (unit) {
+            case "бронеавтомобиль":
+                arrivalTime = (territory === "своя") ? "4:10" : ((territory === "союзник") ? "5:57" : "11:54");
+                break;
+            case "кавалерия":
+                arrivalTime = (territory === "своя") ? "6:15" : ((territорy === "союзник") ? "8:55" : "17:51");
+                break;
+            case "танк":
+                arrivalTime = (territory === "своя") ? "7:30" : ((territory === "союзник") ? "10:42" : "20:24");
+                break;
+            case "пехота":
+                arrivalTime = (territory === "своя") ? "8:20" : ((territory === "союзник") ? "11:54" : "23:48");
+                break;
+            case "тяжёлый танк":
+                arrivalTime = (territory === "своя") ? "10:00" : ((territory === "союзник") ? "14:17" : "28:34");
+                break;
+            case "арта / аэростат":
+                arrivalTime = (territory === "своя") ? "12:00" : ((territory === "союзник") ? "17:08" : "34:17");
+                break;
+            case "железнодорожное орудие":
+                arrivalTime = (territory === "своя") ? "23:04" : ((territory === "союзник") ? "32:58" : "1:05:56");
+                break;
+        }
+
+        // Делим время на скорость
+        if (!isNaN(speed) && speed > 0) {
+            var arrivalTimeArray = arrivalTime.split(":");
+            var hours = parseInt(arrivalTimeArray[0]);
+            var minutes = parseInt(arrivalTimeArray[1]);
+
+            // Рассчитываем новое время прибытия с учетом скорости
+            var newTotalMinutes = Math.round((hours * 60 + minutes) / speed);
+
+            var newHours = Math.floor(newTotalMinutes / 60);
+            var newMinutes = newTotalMinutes % 60;
+
+            arrivalTime = newHours.toString().padStart(2, "0") + ":" + newMinutes.toString().padStart(2, "0");
+        }
+
+        // Отображаем результат на странице
+        document.getElementById("result").innerHTML = "Время прибытия " + unit + " на " + territory + " территории: " + arrivalTime;
+    }
+</script>
+
+</body>
+</html>
