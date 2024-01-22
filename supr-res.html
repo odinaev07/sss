@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+ <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: start;
+            height: 100vh;
+            margin: 0;
+		color: #CCCCCC;
+		background-color: #333333;
+        }
+
+        #response {
+		width: 700px;
+		height: 300px;
+		color: #CCCCCC;
+		background-color: #999999;
+        }
+
+        #resourcesButton {
+		width: 707px;
+		height: 30px;
+		color: white;
+		background-color: #666666;
+        }
+    </style>
+    <title>Ваши Ресы</title>
+</head>
+<body>
+
+<div style="text-align: center;">
+<div style="width: 707px; height: 30px; background-color: #666666; border-radius: 5px; margin: 10px auto; font-size: 23px;">Ресы</div>
+</div>
+
+<textarea id="response" placeholder="Map Data Response"></textarea>
+
+<button id="resourcesButton" onclick="resources()">Ресы</button>
+
+<table id="table"></table>
+
+<script>
+
+function resources(){
+	
+	const players = JSON.parse(document.getElementById("response").value).result.states[1].players;
+	const locations = JSON.parse(document.getElementById("response").value).result.states[3].map.locations;
+
+	var tableData = addNewRow("Команда","Страна","Зерно","Рыба","Железо","Дерево","Уголь","Нефть","Газ","Деньги","Провинции");
+    
+	for(let i = 1 ; players[i] !== undefined; i++){
+		if(players[i].computerPlayer == false){
+			let res = [0,0,0,0,0,0,0,0];
+			let provs = 0;
+			for (let l in locations) {
+				if (locations[l].o == i) {
+					res[Object.keys(locations[l].arp)[0]] += locations[l].arp[Object.keys(locations[l].arp)[0]];
+					res[7] += locations[l].arp[20];
+					provs++;
+				}
+			}
+			
+			tableData += addNewRow
+				( players[i].teamID
+				, players[i].nationName
+				, res[0]
+				, res[1]
+				, res[2]
+				, res[3]
+				, res[4]
+				, res[5]
+				, res[6]
+				, res[7]
+				, provs
+				);
+		}
+	}
+	document.getElementById("table").innerHTML = tableData;
+}
+
+function addNewRow(){
+	let row = "<tr>";
+	for (let a in arguments){
+		row += "<th>" + arguments[a] + "</th>";
+	}
+	return row + "</tr>";
+}
+
+</script>
+
+
+</body>
+</html>
