@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Результаты вычислений</title>
+    <style>
+        body {
+            background-color: #999999;
+            color: #333;
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            text-align: center;
+		font-size: 14px;
+        }
+
+        label, input, button {
+            display: block;
+            margin: 10px auto;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        #result {
+            white-space: pre-wrap;
+            text-align: left;
+        }
+.button28 {
+    position: relative;
+    display: inline-block;
+    font-size: 90%;
+    font-weight: 700;
+    color: rgb(209,209,217);
+    text-decoration: none;
+    text-shadow: 0 -1px 2px rgba(0,0,0,.2);
+    padding: .5em 1em;
+    outline: none;
+    border-radius: 3px;
+    background: linear-gradient(rgb(110,112,120), rgb(81,81,86)) rgb(110,112,120);
+    box-shadow:
+    0 1px rgba(255,255,255,.2) inset,
+    0 3px 5px rgba(0,1,6,.5),
+    0 0 1px 1px rgba(0,1,6,.2);
+    transition: .2s ease-in-out;
+}
+
+.button28:hover:not(:active) {
+    background: linear-gradient(rgb(126,126,134), rgb(70,71,76)) rgb(126,126,134);
+}
+
+.button28:active {
+    top: 1px;
+    background: linear-gradient(rgb(76,77,82), rgb(56,57,62)) rgb(76,77,82);
+    box-shadow:
+    0 0 1px rgba(0,0,0,.5) inset,
+    0 2px 3px rgba(0,0,0,.5) inset,
+    0 1px 1px rgba(255,255,255,.1);
+}
+    </style>
+</head>
+<body>
+
+    <h1>Введите данные</h1>
+
+    <label for="morale">Мораль провинции:</label>
+    <input type="text" id="morale" placeholder="Мораль (%)" style="text-align: center;">
+
+    <label for="hpi">Хп пехоты:</label>
+    <input type="text" id="hpi" placeholder="Введите хп пехоты" style="text-align: center;">
+    <label for="hpimax">Макс хп пехоты:</label>
+    <input type="text" id="hpimax" placeholder="Макс хп пехоты" style="text-align: center;">
+
+    <label for="hpt">Хп техники:</label>
+    <input type="text" id="hpt" placeholder="Хп техники" style="text-align: center;">
+    <label for="hptmax">Макс хп техники:</label>
+    <input type="text" id="hptmax" placeholder="Макс хп техники" style="text-align: center;">
+
+    <button class="button28" onclick="calculate()">Вычислить</button>
+
+    
+
+    <h2>Результат</h2>
+    <pre id="result" style="text-align: center;" style="font-size: 14px;"></pre>
+
+    <script>
+        function calculate() {
+            // Получаем значения из полей ввода
+            var morale = parseFloat(document.getElementById("morale").value);
+            var hpi = parseFloat(document.getElementById("hpi").value);
+            var hpimax = parseFloat(document.getElementById("hpimax").value);
+            var hpt = parseFloat(document.getElementById("hpt").value);
+            var hptmax = parseFloat(document.getElementById("hptmax").value);
+
+            // Вычисления (замените на свою логику)
+            var hpi1 = hpi + 0.01 * hpimax * (morale - 100 * hpi / hpimax) / 5;
+            var hpi2 = hpi + 0.01 * hpimax * (50 - 100 * hpi / hpimax) / 10;
+            var hpi3 = hpi + 0.01 * hpimax * (50 - 100 * hpi / hpimax) / 7;
+            var hpt1 = hpt + 0.01 * hptmax * (50 - 100 * hpt / hptmax) / 7;
+
+            // Вывод результатов
+            var resultText = `
+Хп пехоты на своей: ${hpi1.toFixed(2)} (${(hpi1 / hpimax * 100).toFixed(2)}%)
+Хп пех на союзника: ${hpi2.toFixed(2)} (${(hpi2 / hpimax * 100).toFixed(2)}%)
+Хп пех на вражеско: ${hpi3.toFixed(2)} (${(hpi3 / hpimax * 100).toFixed(2)}%)
+Хп техники на своей территории всегда 
+стремиться к 100%,на других не падает.`;
+
+            // Выводим результаты
+            document.getElementById("result").textContent = resultText;
+        }
+    </script>
+
+</body>
+</html>
