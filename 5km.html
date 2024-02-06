@@ -3,50 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Калькулятор времени прибытия юнитов</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 50px;
-		background-color: #666666;
-        }
-.button28 {
-    position: relative;
-    display: inline-block;
-    font-size: 90%;
-    font-weight: 700;
-    color: rgb(209,209,217);
-    text-decoration: none;
-    text-shadow: 0 -1px 2px rgba(0,0,0,.2);
-    padding: .5em 1em;
-    outline: none;
-    border-radius: 3px;
-    background: linear-gradient(rgb(110,112,120), rgb(81,81,86)) rgb(110,112,120);
-    box-shadow:
-    0 1px rgba(255,255,255,.2) inset,
-    0 3px 5px rgba(0,1,6,.5),
-    0 0 1px 1px rgba(0,1,6,.2);
-    transition: .2s ease-in-out;
-}
-
-.button28:hover:not(:active) {
-    background: linear-gradient(rgb(126,126,134), rgb(70,71,76)) rgb(126,126,134);
-}
-
-.button28:active {
-    top: 1px;
-    background: linear-gradient(rgb(76,77,82), rgb(56,57,62)) rgb(76,77,82);
-    box-shadow:
-    0 0 1px rgba(0,0,0,.5) inset,
-    0 2px 3px rgba(0,0,0,.5) inset,
-    0 1px 1px rgba(255,255,255,.1);
-}
-
-    </style>
+    <title>Калькуляторы</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-
+    <div class="vertical-menu">
+        <a href="index.html">Альянсы</a>
+        <a href="5km.html" class="active">5 км</a>
+        <a href="#">Услуги</a>
+        <a href="#">Контакты</a>
+        <a href="#">Контакты</a>
+    </div>
+    <div class="container">
+            <!-- Контент вашего контейнера справа -->
+<p style="color: white; font-size: 18px;">Подсказка</p>
+<div class="video">
+<video width="230" height="150" controls>
+        <source src="1.mp4" type="video/mp4">
+        Ваш браузер не поддерживает видео в формате MP4.
+    </video>
+</div>
+    </div>
+<div class="budy">
+<!-- Контент вашего контейнера -->
 <h2>Калькулятор 5-и км</h2>
 
 <label for="unit">Юнит:</label>
@@ -66,7 +45,7 @@
 <select id="territory">
     <option value="своя">Своя</option>
     <option value="союзник">Союзник</option>
-    <option value="враг">Вражеская террито</option>
+    <option value="враг">Вражеская территор</option>
 </select>
 
 <br><br>
@@ -76,7 +55,7 @@
 
 <br><br>
 
-<button class="button28" onclick="calculateArrivalTime()">Рассчитать время прибытия...</button>
+<input type="button" class="button-85" value="Показать результат" onclick="calculateArrivalTime()">
 
 <p id="result"></p>
 
@@ -133,6 +112,6 @@
         document.getElementById("result").innerHTML = "Время прибытия " + unit + " на " + territory + " территории: " + arrivalTime;
     }
 </script>
-
+</div>
 </body>
 </html>
