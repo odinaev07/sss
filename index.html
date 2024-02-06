@@ -1,1 +1,96 @@
-здесь пока пусто.
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькуляторы</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="vertical-menu">
+        <a href="index.html" class="active">Альянсы</a>
+        <a href="5km.html">5 км</a>
+        <a href="#">Услуги</a>
+        <a href="#">Контакты</a>
+        <a href="#">Контакты</a>
+    </div>
+    <div class="container">
+            <!-- Контент вашего контейнера справа -->
+<p style="color: white; font-size: 18px;">Подсказка</p>
+<div class="video">
+<video width="230" height="150" controls>
+        <source src="1.mp4" type="video/mp4">
+        Ваш браузер не поддерживает видео в формате MP4.
+    </video>
+</div>
+    </div>
+<div class="budy">
+<!-- Контент вашего контейнера -->
+<h1>Введите данные из getGame&eID</h1>
+    <form id="dataForm">
+        <textarea id="data" name="data" rows="10" cols="50"></textarea><br>
+        <p></p>
+        <input type="button" class="button-85" value="Показать результат" onclick="showInfo()">
+        <p></p>
+    </form>
+    <div id="result"></div>
+
+   
+
+    <script>
+        function showInfo() {
+            var dataStr = document.getElementById('data').value;
+
+            try {
+                var data = JSON.parse(dataStr);
+                var logins = data.result.logins || [];
+            } catch (error) {
+                document.getElementById('result').innerHTML = "Invalid JSON format";
+                return;
+            }
+
+            var alliances = {};
+            for (var i = 0; i < logins.length; i++) {
+                var allianceName = logins[i].allianceName || "Unknown Alliance";
+
+                // Игроки без альянса исключаются из обработки
+                if (allianceName !== "Unknown Alliance") {
+                    alliances[allianceName] = (alliances[allianceName] || 0) + 1;
+                }
+            }
+
+            // Отфильтровываем альянсы с 2 и более участниками
+            var filteredAlliances = {};
+            for (var name in alliances) {
+                if (alliances[name] >= 2) {
+                    filteredAlliances[name] = alliances[name];
+                }
+            }
+
+            // Сортируем альянсы по убыванию
+            var sortedAlliances = Object.keys(filteredAlliances).sort(function (a, b) {
+                return filteredAlliances[b] - filteredAlliances[a];
+            });
+
+            // Формируем результат
+            var resultHTML = "";
+            resultHTML += '<table>';
+            resultHTML += '<tr><th>Кол-во</th><th>Альянс</th></tr>';
+
+            for (var i = 0; i < sortedAlliances.length; i++) {
+                var allianceName = sortedAlliances[i];
+                resultHTML += '<tr>';
+                resultHTML += '<td>' + filteredAlliances[allianceName] + '</td>';
+                resultHTML += '<td>' + allianceName + '</td>';
+                resultHTML += '</tr>';
+            }
+
+            resultHTML += '</table>';
+
+            // Выводим результат на страницу
+            document.getElementById('result').innerHTML = resultHTML;
+        }
+    </script>
+</div>
+</body>
+</html>
