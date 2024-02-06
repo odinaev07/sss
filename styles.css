@@ -1,0 +1,164 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-image: url('back.jpg'); /* Фоновая картинка */
+    background-size: cover; /* Растягиваем фон на всю площадь */
+    background-repeat: no-repeat; /* Отключаем повторение фона */
+    margin: 0; /* Убираем отступы по умолчанию */
+    padding: 0; /* Убираем внутренние отступы по умолчанию */
+}
+
+body::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4); /* Затемнение на 30% */
+    z-index: -1; /* Поднять псевдоэлемент под содержимое */
+}
+
+.vertical-menu {
+    width: 255px;
+    height: 500px;
+    background-color: #8300A3;
+    border-radius: 10px;
+    border: 1px solid black;
+    margin-top: 0%; /* Отступ сверху */
+    margin-left: 1%;
+    text-align: center;
+    align-items: center;
+    float: left;
+}
+
+.vertical-menu a {
+    margin-left: 7%;
+    width: 70%;
+    margin-top: 15%;
+    display: block;
+    padding: 18px 20px;
+    border-radius: 10px;
+    text-decoration: none;
+    color: #FFF; /* Белый цвет текста */
+}
+
+.vertical-menu a:hover {
+    background-color: #6B007C; /* Изменение цвета фона при наведении */
+}
+
+.vertical-menu a.active {
+background-color: #4A0056; /* Цвет активного пункта */
+
+}
+
+
+.container {
+    width: 255px;
+    height: 500px;
+    background-color: #8300A3; /* Изменили цвет контейнера справа */
+    border-radius: 10px;
+    border: 1px solid black;
+    margin-top: 0%; /* Отступ сверху */
+    margin-right: 1%; /* Отступ слева */
+    float: right; /* Помещаем контейнер справа */
+    text-align: center;
+}
+
+.video {
+    width: 230px;
+    height: 150px;
+    background-color: #111113;
+    border-radius: 10px;
+    margin: 0 auto;
+}
+
+.budy {
+    width: 1300px;
+    height: 500px;
+    background-color: #8300A3;
+    border-radius: 10px;
+    margin: 0 auto;
+    margin-top: 8%;
+    text-align: center;
+    border: 1px solid black;
+    align-items: center;
+}
+
+.button-85 {
+  padding: 0.6em 2em;
+  border: none;
+  outline: none;
+  color: rgb(255, 255, 255);
+  background: #111;
+  cursor: pointer;
+  border-radius: 10px;
+  width: 390px;
+}
+
+.button-85:hover {
+  background-color: #222;
+}
+
+.button-85:before {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  width: calc(100% + 4px);
+  height: calc(100% + 4px);
+  background: linear-gradient(
+    45deg,
+    #ff0000,
+    #ff7300,
+    #fffb00,
+    #48ff00,
+    #00ffd5,
+    #002bff,
+    #7a00ff,
+    #ff00c8,
+    #ff0000
+  );
+  filter: blur(5px);
+  border-radius: 10px;
+  animation: glowing-button-85 20s linear infinite;
+}
+
+@keyframes glowing-button-85 {
+  0% {
+    background-position: 0 0;
+  }
+  50% {
+    background-position: 400% 0;
+  }
+  100% {
+    background-position: 0 0;
+  }
+}
+
+#result {
+            
+            color: black !important;
+            padding: 1px;
+            margin-top: 1px;
+        }
+
+        table {
+            margin: 10px auto;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 2px solid black;
+            padding: 5px;
+            text-align: center;
+        }
+
+        form {
+            margin-top: 10px;
+        }
+
+        textarea {
+            margin-top: 10px;
+        }
+
