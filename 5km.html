@@ -5,113 +5,87 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Калькуляторы</title>
     <link rel="stylesheet" href="styles.css">
+<style>
+.boby {
+display: flex;
+flex-direction: column;
+margin-top: 2%;
+font-size: 20px;
+color: white;
+}
+.dodi {
+text-align: center;
+items-align: center;
+}
+
+</style>
 </head>
 <body>
     <div class="vertical-menu">
         <a href="index.html">Альянсы</a>
-	  <a href="5km.html" class="active">5 км</a>
+        <a href="5km.html" class="active">5 км</a>
         <a href="boy.html">Бой</a>
         <a href="skorost.html">Киллометраж</a>
         <a href="#">Контакты</a>
     </div>
     <div class="container">
-            <!-- Контент вашего контейнера справа -->
-<p style="color: white; font-size: 18px;">Подсказка</p>
-<div class="video">
-<video width="230" height="150" controls>
-        <source src="1.mp4" type="video/mp4">
-        Ваш браузер не поддерживает видео в формате MP4.
-    </video>
-</div>
+        <!-- Контент вашего контейнера справа -->
+        <p style="color: white; font-size: 18px;">Подсказка</p>
+        <div class="video">
+            <video width="230" height="150" controls>
+                <source src="1.mp4" type="video/mp4">
+                Ваш браузер не поддерживает видео в формате MP4.
+            </video>
+        </div>
     </div>
-<div class="budy">
-<!-- Контент вашего контейнера -->
-<h2>Калькулятор 5-и км</h2>
-
-<label for="unit">Юнит:</label>
-<select id="unit">
-    <option value="бронеавтомобиль">Бронеавтомобиль</option>
-    <option value="кавалерия">Кавалерия</option>
-    <option value="танк">Танк</option>
-    <option value="пехота">Пехота</option>
-    <option value="тяжёлый танк">Тяжёлый танк</option>
-    <option value="арта / аэростат">Арта / Аэростат</option>
-    <option value="железнодорожное орудие">Железнодорожное орудие</option>
-</select>
-
+    <div class="budy">
+        <!-- Контент вашего контейнера -->
+<label for="speed" class="boby">Скорость юнита(км):</label><br>
+<input type="text" id="speed" min="0" step="any" class="dodi"><br>
+<br>
+<label for="mapSpeed" class="boby">Скорость карты:</label><br>
+<input type="text" id="mapSpeed" min="1" step="any" value="1" class="dodi"><br>
+<br>
+<label for="faction" class="boby">Выберите провинцию</label><br>
+<select id="faction">
+  <option value="1">Своя провинция</option>
+  <option value="0.7">Дружеская провинция</option>
+  <option value="0.35">Вражеская провинция</option>
+</select><br>
+<br>
+<label for="march" class="boby">Марш включен?</label>
+<input type="checkbox" id="march">
 <br><br>
 
-<label for="territory">Территория:</label>
-<select id="territory">
-    <option value="своя">Своя</option>
-    <option value="союзник">Союзник</option>
-    <option value="враг">Вражеская территор</option>
-</select>
+        <input type="button" class="button-85" value="Показать результат" onclick="calculateArrivalTime()">
 
-<br><br>
-
-<label for="speed">Скорост:</label>
-<input type="number" id="speed" placeholder="х1,х2,х4...">
-
-<br><br>
-
-<input type="button" class="button-85" value="Показать результат" onclick="calculateArrivalTime()">
-
-<p id="result"></p>
+<p id="arrivalTime" class="boby"></p>
 
 <script>
-    function calculateArrivalTime() {
-        // Получаем выбранные значения
-        var unit = document.getElementById("unit").value;
-        var territory = document.getElementById("territory").value;
-        var speed = parseFloat(document.getElementById("speed").value);
-
-        // Ваша функция для расчета времени прибытия
-        var arrivalTime = "00:00";
-
-        switch (unit) {
-            case "бронеавтомобиль":
-                arrivalTime = (territory === "своя") ? "4:10" : ((territory === "союзник") ? "5:57" : "11:54");
-                break;
-            case "кавалерия":
-                arrivalTime = (territory === "своя") ? "6:15" : ((territорy === "союзник") ? "8:55" : "17:51");
-                break;
-            case "танк":
-                arrivalTime = (territory === "своя") ? "7:30" : ((territory === "союзник") ? "10:42" : "20:24");
-                break;
-            case "пехота":
-                arrivalTime = (territory === "своя") ? "8:20" : ((territory === "союзник") ? "11:54" : "23:48");
-                break;
-            case "тяжёлый танк":
-                arrivalTime = (territory === "своя") ? "10:00" : ((territory === "союзник") ? "14:17" : "28:34");
-                break;
-            case "арта / аэростат":
-                arrivalTime = (territory === "своя") ? "12:00" : ((territory === "союзник") ? "17:08" : "34:17");
-                break;
-            case "железнодорожное орудие":
-                arrivalTime = (territory === "своя") ? "23:04" : ((territory === "союзник") ? "32:58" : "1:05:56");
-                break;
-        }
-
-        // Делим время на скорость
-        if (!isNaN(speed) && speed > 0) {
-            var arrivalTimeArray = arrivalTime.split(":");
-            var hours = parseInt(arrivalTimeArray[0]);
-            var minutes = parseInt(arrivalTimeArray[1]);
-
-            // Рассчитываем новое время прибытия с учетом скорости
-            var newTotalMinutes = Math.round((hours * 60 + minutes) / speed);
-
-            var newHours = Math.floor(newTotalMinutes / 60);
-            var newMinutes = newTotalMinutes % 60;
-
-            arrivalTime = newHours.toString().padStart(2, "0") + ":" + newMinutes.toString().padStart(2, "0");
-        }
-
-        // Отображаем результат на странице
-        document.getElementById("result").innerHTML = "Время прибытия " + unit + " на " + territory + " территории: " + arrivalTime;
+    // Функция для добавления ведущего нуля к числу, если оно меньше 10
+    function addLeadingZero(number) {
+        return number < 10 ? "0" + number : number;
     }
-</script>
-</div>
+
+    function calculateArrivalTime() {
+        var distance = 5; // Расстояние всегда 5 км
+        var speed = parseFloat(document.getElementById('speed').value);
+        var mapSpeed = parseFloat(document.getElementById('mapSpeed').value);
+        var faction = parseFloat(document.getElementById('faction').value);
+        var march = document.getElementById('march').checked ? 1.5 : 1;
+
+        var timeInSeconds = distance * 3600 / (speed * faction * march * mapSpeed);
+
+        var hours = Math.floor(timeInSeconds / 3600);
+        var minutes = Math.floor((timeInSeconds % 3600) / 60);
+        var seconds = Math.floor(timeInSeconds % 60);
+        
+        // Форматирование времени в формат "чч:мм:сс"
+        var formattedTime = addLeadingZero(hours) + ":" + addLeadingZero(minutes) + ":" + addLeadingZero(seconds);
+        
+        document.getElementById('arrivalTime').innerText = "Прибытие через " + formattedTime;
+    }
+  </script>
+    </div>
 </body>
 </html>
