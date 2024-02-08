@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькуляторы</title>
+    <p style="background-image: url('back.jpg');">
+    <link rel="stylesheet" href="styles.css">
+<style>
+  body {
+    background-color: #f0f0f0; /* Матовый цвет фона */
+    text-align: center; /* Центрирование содержимого */
+  }
+  
+  form {
+    display: inline-block; /* Содержимое формы находится внутри блока */
+    text-align: left; /* Выравнивание текста в форме по левому краю */
+    padding: 15px; /* Поля вокруг формы */
+    background-color: white; /* Белый фон формы */
+    border-radius: 20px; /* Закругленные углы формы */
+    box-shadow: 0 0 100px rgba(0, 0, 0, 0.1); /* Тень для формы */
+    text-align: center;
+    margin-top: 2.5%;
+  }
+  
+
+
+label {
+    font-size: 16px; /* устанавливаем размер шрифта */
+    color: #333; /* устанавливаем цвет текста */
+    font-weight: bold; /* делаем текст жирным */
+    display: block; /* устанавливаем блочный тип отображения */
+    text-align: center;
+    align-items: center;
+}
+input {
+width: 180px;
+text-align: center;
+}
+select {
+width: 180px;
+text-align: center;
+}
+
+
+.button-85 {
+  padding: 0.6em 2em;
+  border: none;
+  outline: none;
+  color: rgb(255, 255, 255);
+  background: #111;
+  cursor: pointer;
+  position: relative;
+  z-index: 0;
+  border-radius: 10px;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  width: 100%;
+}
+
+.button-85:before {
+  content: "";
+  background: linear-gradient(
+    45deg,
+    #ff0000,
+    #ff7300,
+    #fffb00,
+    #48ff00,
+    #00ffd5,
+    #002bff,
+    #7a00ff,
+    #ff00c8,
+    #ff0000
+  );
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  background-size: 400%;
+  z-index: -1;
+  filter: blur(5px);
+  -webkit-filter: blur(5px);
+  width: calc(100% + 4px);
+  height: calc(100% + 4px);
+  animation: glowing-button-85 20s linear infinite;
+  transition: opacity 0.3s ease-in-out;
+  border-radius: 10px;
+}
+
+@keyframes glowing-button-85 {
+  0% {
+    background-position: 0 0;
+  }
+  50% {
+    background-position: 400% 0;
+  }
+  100% {
+    background-position: 0 0;
+  }
+}
+
+.button-85:after {
+  z-index: -1;
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: #222;
+  left: 0;
+  top: 0;
+  border-radius: 10px;
+}
+</style>
+</head>
+<body>
+    <div class="vertical-menu">
+        <a href="index.html">Альянсы</a>
+        <a href="5km.html">5 км</a>
+        <a href="boy.html">Бой</a>
+        <a href="skorost.html" class="active">Киллометраж</a>
+        <a href="#">Контакты</a>
+    </div>
+    <div class="container">
+            <!-- Контент вашего контейнера справа -->
+<p style="color: white; font-size: 18px;">Подсказка</p>
+<div class="video">
+<video width="230" height="150" controls>
+        <source src="1.mp4" type="video/mp4">
+        Ваш браузер не поддерживает видео в формате MP4.
+    </video>
+</div>
+    </div>
+<div class="budy">
+<!-- Контент вашего контейнера -->
+<form id="speedCalculator">
+  <label for="distance1">1-ая половина дороги(км)</label>
+  <input type="text" id="distance1" name="distance1" required> 
+  <br></br>
+  <label for="terrain1">Тип территории</label>
+  <select id="terrain1" name="terrain1">
+    <option value="friendly">Дружественная....(-30%)</option>
+    <option value="neutral">Своя (100%)</option>
+    <option value="enemy">Вражеская (-65%)</option>
+  </select><br><br>
+  
+  <label for="distance2">2-ая половина дороги(км)</label>
+  <input type="text" id="distance2" name="distance2" required><br><br>
+  
+  <label for="terrain2">Тип территории</label>
+  <select id="terrain2" name="terrain2">
+    <option value="friendly">Дружественная (-30%)</option>
+    <option value="neutral">Своя (100%)</option>
+    <option value="enemy">Вражеская (-65%)</option>
+  </select><br><br>
+
+  <label for="speed">Скорость армии (км/ч)</label>
+  <input type="text" id="speed" name="speed" required><br><br>
+
+
+  <label for="march">Марш включен?</label>
+  <input type="checkbox" id="march" name="march">
+<br><br>
+  
+  <button type="button" class="button-85" onclick="calculateTime()">Рассчитать</button>
+<p id="result"></p>
+</form>
+
+<script>
+function calculateTime() {
+  var distance1 = parseFloat(document.getElementById("distance1").value);
+  var distance2 = parseFloat(document.getElementById("distance2").value);
+  var terrain1 = document.getElementById("terrain1").value;
+  var terrain2 = document.getElementById("terrain2").value;
+  var speed = parseFloat(document.getElementById("speed").value);
+  var marchCheckbox = document.getElementById("march");
+  var marchModifier = marchCheckbox.checked ? 1.5 : 1; // Если чекбокс отмечен, увеличиваем скорость на 50%
+  
+  var terrainModifier1 = 1; // По умолчанию своя территория для первой половины
+  var terrainModifier2 = 1; // По умолчанию своя территория для второй половины
+  
+  if (terrain1 === "friendly") {
+    terrainModifier1 = 0.7; // Дружественная территория для первой половины
+  } else if (terrain1 === "enemy") {
+    terrainModifier1 = 0.35; // Вражеская территория для первой половины
+  }
+  
+  if (terrain2 === "friendly") {
+    terrainModifier2 = 0.7; // Дружественная территория для второй половины
+  } else if (terrain2 === "enemy") {
+    terrainModifier2 = 0.35; // Вражеская территория для второй половины
+  }
+  
+  var adjustedSpeed1 = speed * marchModifier * terrainModifier1;
+  var adjustedSpeed2 = speed * marchModifier * terrainModifier2;
+  
+  var timeInMinutes1 = (distance1 / adjustedSpeed1) * 60; // Время в минутах для первой половины
+  var timeInMinutes2 = (distance2 / adjustedSpeed2) * 60; // Время в минутах для второй половины
+  
+  var totalTimeInMinutes = timeInMinutes1 + timeInMinutes2; // Общее время в минутах
+  
+  var hours = Math.floor(totalTimeInMinutes / 60); // Получаем количество часов
+  var minutes = Math.round(totalTimeInMinutes % 60); // Получаем количество минут
+  
+  document.getElementById("result").innerText = "Время перемещения: " + hours + " ч " + minutes + " мин";
+}
+</script>
+</div>
+</body>
+</html>
