@@ -117,7 +117,7 @@ text-align: center;
         <a href="index.html">Альянсы</a>
         <a href="5km.html">5 км</a>
         <a href="boy.html">Бой</a>
-        <a href="skorost.html" class="active">Киллометраж</a>
+        <a href="skorost.html" class="active">Километраж</a>
         <a href="#">Контакты</a>
     </div>
     <div class="container">
@@ -193,17 +193,19 @@ function calculateTime() {
   var adjustedSpeed1 = speed * marchModifier * terrainModifier1;
   var adjustedSpeed2 = speed * marchModifier * terrainModifier2;
   
-  var timeInMinutes1 = (distance1 / adjustedSpeed1) * 60; // Время в минутах для первой половины
-  var timeInMinutes2 = (distance2 / adjustedSpeed2) * 60; // Время в минутах для второй половины
+  var timeInSeconds1 = (distance1 / adjustedSpeed1) * 3600; // Время в секундах для первой половины
+  var timeInSeconds2 = (distance2 / adjustedSpeed2) * 3600; // Время в секундах для второй половины
   
-  var totalTimeInMinutes = timeInMinutes1 + timeInMinutes2; // Общее время в минутах
+  var totalTimeInSeconds = timeInSeconds1 + timeInSeconds2; // Общее время в секундах
   
-  var hours = Math.floor(totalTimeInMinutes / 60); // Получаем количество часов
-  var minutes = Math.round(totalTimeInMinutes % 60); // Получаем количество минут
+  var hours = Math.floor(totalTimeInSeconds / 3600); // Получаем количество часов
+  var minutes = Math.floor((totalTimeInSeconds % 3600) / 60); // Получаем количество минут
+  var seconds = Math.round(totalTimeInSeconds % 60); // Получаем количество секунд
   
-  document.getElementById("result").innerText = "Время перемещения: " + hours + " ч " + minutes + " мин";
+  document.getElementById("result").innerText = "Время перемещения: " + hours + " ч " + minutes + " мин " + seconds + " сек";
 }
 </script>
+
 </div>
 </body>
 </html>
