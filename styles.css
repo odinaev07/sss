@@ -22,7 +22,7 @@ body::before {
 .vertical-menu {
     width: 255px;
     height: 500px;
-    background-color: #8300A3;
+    background-color: #999999;
     border-radius: 10px;
     border: 1px solid black;
     margin-top: 0%; /* Отступ сверху */
@@ -44,11 +44,11 @@ body::before {
 }
 
 .vertical-menu a:hover {
-    background-color: #6B007C; /* Изменение цвета фона при наведении */
+    background-color: #666666; /* Изменение цвета фона при наведении */
 }
 
 .vertical-menu a.active {
-background-color: #4A0056; /* Цвет активного пункта */
+background-color: #333333; /* Цвет активного пункта */
 
 }
 
@@ -56,7 +56,7 @@ background-color: #4A0056; /* Цвет активного пункта */
 .container {
     width: 255px;
     height: 500px;
-    background-color: #8300A3; /* Изменили цвет контейнера справа */
+    background-color: #999999; /* Изменили цвет контейнера справа */
     border-radius: 10px;
     border: 1px solid black;
     margin-top: 0%; /* Отступ сверху */
@@ -68,7 +68,7 @@ background-color: #4A0056; /* Цвет активного пункта */
 .video {
     width: 230px;
     height: 150px;
-    background-color: #111113;
+    background-color: #999999;
     border-radius: 10px;
     margin: 0 auto;
 }
@@ -76,7 +76,7 @@ background-color: #4A0056; /* Цвет активного пункта */
 .budy {
     width: 1300px;
     height: auto;
-    background-color: #8300A3;
+    background-color: #999999;
     border-radius: 10px;
     margin: 0 auto;
     margin-top: 8%;
