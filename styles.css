@@ -75,7 +75,7 @@ background-color: #4A0056; /* Цвет активного пункта */
 
 .budy {
     width: 1300px;
-    height: 500px;
+    height: auto;
     background-color: #8300A3;
     border-radius: 10px;
     margin: 0 auto;
