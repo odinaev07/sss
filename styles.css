@@ -16,8 +16,6 @@ body::before {
     z-index: -1; /* Поднять псевдоэлемент под содержимое */
 }
 
-
-
 .vertical-menu {
  display: flex; /* Используем flexbox для расположения элементов горизонтально */
     justify-content: center; /* Выравниваем элементы по центру */
@@ -30,14 +28,18 @@ body::before {
 }
 
 .vertical-menu a {
-    width: center;
-    margin-top: 0.1%;
-    margin-bottom: 0.1%;
+    width: center; /* Ширина занимает 100% доступного пространства */
+    box-sizing: border-box; /* Учитываем padding и border в общей ширине */
     display: block;
-    padding: 18px 20px;
+    padding: 10px; /* Уменьшаем отступы для удобства чтения на мобильных устройствах */
     border-radius: 10px;
     text-decoration: none;
-    color: #FFF; /* Белый цвет текста */
+    color: black; /* Черный цвет текста */
+    font-size: 18px; /* Базовый размер шрифта */
+    margin-top: 0.1%;
+    margin-bottom: 0.1%;
+
+
 }
 
 .vertical-menu a:hover {
