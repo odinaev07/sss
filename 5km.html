@@ -28,64 +28,58 @@ items-align: center;
         <a href="skorost.html">Киллометраж</a>
         <a href="#">Контакты</a>
     </div>
-    <div class="container">
-        <!-- Контент вашего контейнера справа -->
-        <p style="color: white; font-size: 18px;">Подсказка</p>
-        <div class="video">
-            <video width="230" height="150" controls>
-                <source src="1.mp4" type="video/mp4">
-                Ваш браузер не поддерживает видео в формате MP4.
-            </video>
-        </div>
-    </div>
-    <div class="budy">
-        <!-- Контент вашего контейнера -->
-<label for="speed" class="boby">Скорость юнита(км):</label><br>
-<input type="text" id="speed" min="0" step="any" class="dodi"><br>
-<br>
-<label for="mapSpeed" class="boby">Скорость карты:</label><br>
-<input type="text" id="mapSpeed" min="1" step="any" value="1" class="dodi"><br>
-<br>
-<label for="faction" class="boby">Выберите провинцию</label><br>
-<select id="faction">
-  <option value="1">Своя провинция</option>
-  <option value="0.7">Дружеская провинция</option>
-  <option value="0.35">Вражеская провинция</option>
-</select><br>
-<br>
-<label for="march" class="boby">Марш включен?</label>
-<input type="checkbox" id="march">
-<br><br>
 
-        <input type="button" class="button-85" value="Показать результат" onclick="calculateArrivalTime()">
+<div class="budy">
+    <!-- Контент вашего контейнера -->
+    <label for="distance" class="boby">Расстояние (км):</label><br>
+    <input type="text" id="distance" min="0" step="any" class="dodi"><br><br>
 
-<p id="arrivalTime" class="boby"></p>
+    <label for="speed" class="boby">Скорость юнита(км):</label><br>
+    <input type="text" id="speed" min="0" step="any" class="dodi"><br><br>
 
-<script>
-    // Функция для добавления ведущего нуля к числу, если оно меньше 10
-    function addLeadingZero(number) {
-        return number < 10 ? "0" + number : number;
-    }
+    <label for="mapSpeed" class="boby">Скорость карты:</label><br>
+    <input type="text" id="mapSpeed" min="1" step="any" value="1" class="dodi"><br><br>
 
-    function calculateArrivalTime() {
-        var distance = 5; // Расстояние всегда 5 км
-        var speed = parseFloat(document.getElementById('speed').value);
-        var mapSpeed = parseFloat(document.getElementById('mapSpeed').value);
-        var faction = parseFloat(document.getElementById('faction').value);
-        var march = document.getElementById('march').checked ? 1.5 : 1;
+    <label for="faction" class="boby">Выберите провинцию</label><br>
+    <select id="faction">
+        <option value="1">Своя провинция</option>
+        <option value="0.7">Дружеская провинция</option>
+        <option value="0.35">Вражеская провинция</option>
+    </select><br><br>
 
-        var timeInSeconds = distance * 3600 / (speed * faction * march * mapSpeed);
+    <label for="march" class="boby">Марш включен?</label>
+    <input type="checkbox" id="march">
+    <br><br>
 
-        var hours = Math.floor(timeInSeconds / 3600);
-        var minutes = Math.floor((timeInSeconds % 3600) / 60);
-        var seconds = Math.floor(timeInSeconds % 60);
-        
-        // Форматирование времени в формат "чч:мм:сс"
-        var formattedTime = addLeadingZero(hours) + ":" + addLeadingZero(minutes) + ":" + addLeadingZero(seconds);
-        
-        document.getElementById('arrivalTime').innerText = "Прибытие через " + formattedTime;
-    }
-  </script>
-    </div>
+    <input type="button" class="button-85" value="Показать результат" onclick="calculateArrivalTime()">
+
+    <p id="arrivalTime" class="boby"></p>
+
+    <script>
+        // Функция для добавления ведущего нуля к числу, если оно меньше 10
+        function addLeadingZero(number) {
+            return number < 10 ? "0" + number : number;
+        }
+
+        function calculateArrivalTime() {
+            var distance = parseFloat(document.getElementById('distance').value);
+            var speed = parseFloat(document.getElementById('speed').value);
+            var mapSpeed = parseFloat(document.getElementById('mapSpeed').value);
+            var faction = parseFloat(document.getElementById('faction').value);
+            var march = document.getElementById('march').checked ? 1.5 : 1;
+
+            var timeInSeconds = distance * 3600 / (speed * faction * march * mapSpeed);
+
+            var hours = Math.floor(timeInSeconds / 3600);
+            var minutes = Math.floor((timeInSeconds % 3600) / 60);
+            var seconds = Math.floor(timeInSeconds % 60);
+
+            var formattedTime = addLeadingZero(hours) + ":" + addLeadingZero(minutes) + ":" + addLeadingZero(seconds);
+
+            document.getElementById('arrivalTime').innerText = "Прибытие через " + formattedTime;
+        }
+    </script>
+</div>
+
 </body>
 </html>
