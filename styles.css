@@ -1,11 +1,8 @@
 body {
-    margin: 0;
-    padding: 0;
     background-image: url('back.jpg'); /* Фоновая картинка */
-    background-size: cover; /* Растягиваем фон на всю площадь */
+    background-size: auto; /* Растягиваем фон на всю площадь */
     background-repeat: no-repeat; /* Отключаем повторение фона */
-    margin: 0; /* Убираем отступы по умолчанию */
-    padding: 0; /* Убираем внутренние отступы по умолчанию */
+
 }
 
 body::before {
@@ -19,23 +16,23 @@ body::before {
     z-index: -1; /* Поднять псевдоэлемент под содержимое */
 }
 
+
+
 .vertical-menu {
-    width: 255px;
-    height: 500px;
-    background-color: #999999;
+ display: flex; /* Используем flexbox для расположения элементов горизонтально */
+    justify-content: center; /* Выравниваем элементы по центру */
+    background-color: #8300A3;
     border-radius: 10px;
     border: 1px solid black;
-    margin-top: 0%; /* Отступ сверху */
-    margin-left: 1%;
-    text-align: center;
-    align-items: center;
-    float: left;
+    margin-top: 0.1%;
+    margin-left: 0.2%;
+    margin-right: 0.2%;
 }
 
 .vertical-menu a {
-    margin-left: 7%;
-    width: 70%;
-    margin-top: 15%;
+    width: center;
+    margin-top: 0.1%;
+    margin-bottom: 0.1%;
     display: block;
     padding: 18px 20px;
     border-radius: 10px;
@@ -44,42 +41,20 @@ body::before {
 }
 
 .vertical-menu a:hover {
-    background-color: #666666; /* Изменение цвета фона при наведении */
+    background-color: #6B007C; /* Изменение цвета фона при наведении */
 }
 
 .vertical-menu a.active {
-background-color: #333333; /* Цвет активного пункта */
+background-color: #4A0056; /* Цвет активного пункта */
 
-}
-
-
-.container {
-    width: 255px;
-    height: 500px;
-    background-color: #999999; /* Изменили цвет контейнера справа */
-    border-radius: 10px;
-    border: 1px solid black;
-    margin-top: 0%; /* Отступ сверху */
-    margin-right: 1%; /* Отступ слева */
-    float: right; /* Помещаем контейнер справа */
-    text-align: center;
-}
-
-.video {
-    width: 230px;
-    height: 150px;
-    background-color: #999999;
-    border-radius: 10px;
-    margin: 0 auto;
 }
 
 .budy {
-    width: 1300px;
-    height: auto;
-    background-color: #999999;
+    margin-left: 0.2%;
+    margin-right: 0.2%;
+    background-color: #8300A3;
     border-radius: 10px;
-    margin: 0 auto;
-    margin-top: 8%;
+    margin-top: 2%;
     text-align: center;
     border: 1px solid black;
     align-items: center;
