@@ -20,36 +20,26 @@ items-align: center;
 
 </style>
 </head>
-<body>
-    <div class="vertical-menu">
-        <a href="index.html">Альянсы</a>
-        <a href="5km.html" class="active">5 км</a>
-        <a href="boy.html">Бой</a>
-        <a href="skorost.html">Киллометраж</a>
-        <a href="moral.html">Мораль</a>
-    </div>
-
 <div class="budy">
     <!-- Контент вашего контейнера -->
-    <label for="distance" class="boby">Расстояние (км):</label><br>
-    <input type="text" id="distance" min="0" step="any" class="dodi"><br><br>
+    <label for="distance" class="boby">Расстояние (км):</label>
+    <input type="text" id="distance" min="0" step="any" class="dodi">
+    <label for="speed" class="boby">Скорость юнита(км):</label>
+    <input type="text" id="speed" min="0" step="any" class="dodi">
 
-    <label for="speed" class="boby">Скорость юнита(км):</label><br>
-    <input type="text" id="speed" min="0" step="any" class="dodi"><br><br>
+    <label for="mapSpeed" class="boby">Скорость карты:</label>
+    <input type="text" id="mapSpeed" min="1" step="any" value="1" class="dodi">
 
-    <label for="mapSpeed" class="boby">Скорость карты:</label><br>
-    <input type="text" id="mapSpeed" min="1" step="any" value="1" class="dodi"><br><br>
-
-    <label for="faction" class="boby">Выберите провинцию</label><br>
+    <label for="faction" class="boby">Выберите провинцию</label>
     <select id="faction">
         <option value="1">Своя провинция</option>
         <option value="0.7">Дружеская провинция</option>
         <option value="0.35">Вражеская провинция</option>
-    </select><br><br>
+    </select>
 
     <label for="march" class="boby">Марш включен?</label>
     <input type="checkbox" id="march">
-    <br><br>
+    <br>
 
     <input type="button" class="button-85" value="Показать результат" onclick="calculateArrivalTime()">
 
