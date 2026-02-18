@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>S1914 ANALYZER: FINAL FIX</title>
+    <style>
+        :root { --bg: #222; --panel: #333; --text: #eee; --accent: #00bcd4; --t1: #2ecc71; --t2: #3498db; --human: #ff9800; }
+        body { margin: 0; font-family: 'Segoe UI', monospace; background: var(--bg); color: var(--text); height: 100vh; display: flex; overflow: hidden; }
+        
+        .left { flex: 1; background: #444; position: relative; border-right: 1px solid #555; }
+        #map-wrapper { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
+        svg { width: 100%; height: 100%; display: block; }
+        svg path { stroke: #666; stroke-width: 0.5px; cursor: crosshair; transition: 0.1s; vector-effect: non-scaling-stroke; }
+        svg path:hover { stroke: #fff !important; stroke-width: 2px !important; fill-opacity: 0.8; z-index: 100; position:relative; }
+
+        #tooltip {
+            position: absolute; bottom: 20px; left: 20px;
+            background: rgba(0,0,0,0.95); border: 1px solid var(--accent);
+            padding: 15px; border-radius: 4px; pointer-events: none; display: none;
+            box-shadow: 0 0 20px rgba(0,255,255,0.1); font-size: 13px; min-width: 220px; z-index: 999;
+        }
+        #tooltip strong { color: var(--accent); font-size: 16px; display: block; margin-bottom: 5px; border-bottom: 1px solid #555; padding-bottom: 5px; }
+        .row { display: flex; justify-content: space-between; margin-bottom: 3px; }
+
+        .right { width: 460px; background: var(--panel); display: flex; flex-direction: column; box-shadow: -5px 0 20px rgba(0,0,0,0.5); z-index: 100; }
+        .content { padding: 20px; overflow-y: auto; flex: 1; }
+        
+        .box { background: #2a2a2a; border: 1px solid #444; padding: 15px; margin-bottom: 15px; border-radius: 6px; }
+        .box h3 { margin: 0 0 10px 0; font-size: 12px; color: #aaa; letter-spacing: 1px; text-transform: uppercase; border-bottom: 1px solid #444; padding-bottom: 5px; }
+        
+        input[type="file"] { width: 100%; background: #444; color: white; border: 1px solid #555; padding: 5px; box-sizing: border-box; }
+        
+        select { 
+            width: 100%; padding: 10px; font-size: 14px; font-weight: bold;
+            background: #006064; border: 1px solid var(--accent); color: white;
+            cursor: pointer; margin-top: 5px; outline: none; border-radius: 4px;
+        }
+        select option { background: #333; }
+        select:disabled { background: #444; border-color: #555; color: #777; cursor: not-allowed; }
+        
+        table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 5px; }
+        th, td { border: 1px solid #555; padding: 6px; text-align: center; }
+        th { background: #1a1a1a; color: #ccc; }
+        
+        .c1 { color: var(--t1); font-weight: 800; }
+        .c2 { color: var(--t2); font-weight: 800; }
+        .ch { color: var(--human); font-weight: 800; }
+        
+        #log { font-size: 11px; color: #aaa; margin-top: 5px; white-space: pre-wrap; font-family: monospace; }
+        
+        .legend { display: flex; gap: 10px; justify-content: center; margin-bottom: 10px; font-size: 11px; }
+        .dot { width: 10px; height: 10px; display: inline-block; border-radius: 50%; margin-right: 4px; }
+    </style>
+</head>
+<body>
+
+<div class="left">
+    <div id="map-wrapper">
+        <h3 style="color:#777">Загрузите regions.json и map.svg</h3>
+    </div>
+    <div id="tooltip">
+        <strong id="tt-owner">-</strong>
+        <div class="row"><span>Prov ID:</span> <span id="tt-id">-</span></div>
+        <div class="row"><span>Owner ID:</span> <span id="tt-oid">-</span></div>
+        <div class="row"><span>Team:</span> <span id="tt-team">-</span></div>
+        <div class="row"><span>Res:</span> <span id="tt-res">-</span></div>
+        <div class="row"><span>Morale:</span> <span id="tt-mor">-</span></div>
+    </div>
+</div>
+
+<div class="right">
+    <div class="content">
+        <h2 style="text-align:center; margin:0 0 10px 0; color:var(--accent);">S1914 ANALYZER</h2>
+        
+        <div class="legend">
+            <div><span class="dot" style="background:var(--t1)"></span>Team 1</div>
+            <div><span class="dot" style="background:var(--t2)"></span>Team 2</div>
+            <div><span class="dot" style="background:var(--human)"></span>Solo Player</div>
+            <div><span class="dot" style="background:#555"></span>AI/Neutral</div>
+        </div>
+        
+        <div class="box">
+            <h3>1. Файл данных</h3>
+            <div>Статус: <b id="st-stat">...</b></div>
+            <input type="file" id="file-in" style="margin-top:5px;">
+            <div id="log">Ожидание файла...</div>
+        </div>
+
+        <div class="box" style="border-left: 3px solid var(--accent);">
+            <h3>2. Выбор хода (Snapshot)</h3>
+            <div style="font-size:11px; color:#aaa; margin-bottom:5px;">Выберите момент времени (обычно самый нижний):</div>
+            <select id="state-select" disabled>
+                <option>Сначала загрузите файл</option>
+            </select>
+        </div>
+
+        <div class="box">
+            <h3>Current Income</h3>
+            <table id="t-inc"><thead><tr><th>Tm</th><th>🌾</th><th>🐟</th><th>⛓️</th><th>🌲</th><th>🛢️</th><th>🌑</th><th>💨</th></tr></thead><tbody></tbody></table>
+        </div>
+        
+        <div class="box">
+            <h3>Slots (Potential)</h3>
+            <table id="t-slot"><thead><tr><th>Tm</th><th>FOOD</th><th>MAT</th><th>NRG</th></tr></thead><tbody></tbody></table>
+        </div>
+    </div>
+</div>
+
+<script>
+    const COLORS = { 1: '#2ecc71', 2: '#3498db', h: '#ff9800', n: '#555' };
+    let REGIONS = null;
+    let GLOBAL_PLAYERS = {};
+    let FOUND_SNAPSHOTS = [];
+
+    window.onload = async () => {
+        try {
+            const [r, s] = await Promise.all([fetch('regions.json'), fetch('map.svg')]);
+            REGIONS = await r.json();
+            document.getElementById('map-wrapper').innerHTML = await s.text();
+            fixSvg();
+            document.getElementById('st-stat').innerHTML = "<span style='color:green'>OK</span>";
+        } catch(e) {
+            document.getElementById('st-stat').innerHTML = "<span style='color:red'>ОШИБКА SVG/JSON</span>";
+        }
+    };
+
+    document.getElementById('file-in').addEventListener('change', (e) => {
+        const f = e.target.files[0];
+        if(!f) return;
+        
+        document.getElementById('log').innerText = "Анализ файла...";
+        const r = new FileReader();
+        r.onload = (ev) => {
+            try {
+                const json = JSON.parse(ev.target.result);
+                analyzeFile(json);
+            } catch(err) { 
+                console.error("JSON Error:", err);
+                alert("Ошибка при чтении JSON файла"); 
+            }
+        };
+        r.readAsText(f);
+    });
+
+    function analyzeFile(root) {
+        FOUND_SNAPSHOTS = [];
+        GLOBAL_PLAYERS = {};
+        let visited = new Set();
+
+        function traverse(obj, depth = 0) {
+            if (!obj || typeof obj !== 'object' || depth > 20) return;
+            if (visited.has(obj)) return;
+            visited.add(obj);
+
+            // Собираем игроков
+            if (obj.players) {
+                for (let pid in obj.players) {
+                    GLOBAL_PLAYERS[String(pid)] = obj.players[pid];
+                }
+            }
+
+            // Ищем карту. Признак: есть provinces ИЛИ есть объект с ключом 'o' (owner) внутри списка
+            if (obj.provinces && typeof obj.provinces === 'object') {
+                // Это явный список provinces
+                let t = obj.gameTime || obj.dayOfGame || (FOUND_SNAPSHOTS.length * 10000);
+                FOUND_SNAPSHOTS.push({
+                    time: Number(t),
+                    data: obj,
+                    id: FOUND_SNAPSHOTS.length
+                });
+            } else if (Array.isArray(obj)) {
+                 // Может это массив провинций без обертки? Проверим первый элемент
+                 if (obj.length > 5 && obj[0] && (obj[0].id !== undefined || obj[0].n !== undefined) && (obj[0].o !== undefined || obj[0].ownerID !== undefined)) {
+                     FOUND_SNAPSHOTS.push({
+                        time: FOUND_SNAPSHOTS.length * 10000,
+                        data: { provinces: obj }, // Оборачиваем
+                        id: FOUND_SNAPSHOTS.length
+                    });
+                 }
+            }
+
+            for (let k in obj) {
+                if (k !== 'owner' && k !== 'morale' && typeof obj[k] === 'object') {
+                    traverse(obj[k], depth + 1);
+                }
+            }
+        }
+        
+        if (root.result) traverse(root.result);
+        else traverse(root);
+        
+        const log = document.getElementById('log');
+        
+        // Удаляем дубли и сортируем
+        FOUND_SNAPSHOTS = [...new Set(FOUND_SNAPSHOTS)].sort((a,b) => a.time - b.time);
+        
+        if (FOUND_SNAPSHOTS.length === 0) {
+            // ФОЛЛБЭК: Если ничего не нашли, попробуем искать mapInfo (старый формат)
+            traverse(root); 
+             if (FOUND_SNAPSHOTS.length === 0) {
+                log.innerHTML = "В файле не найдено данных карты (provinces/mapInfo)!";
+                return;
+             }
+        }
+        
+        log.innerText = `Найдено снимков: ${FOUND_SNAPSHOTS.length}\nИгроков: ${Object.keys(GLOBAL_PLAYERS).length}`;
+        updateMenu();
+    }
+
+    function updateMenu() {
+        const sel = document.getElementById('state-select');
+        sel.innerHTML = "";
+        
+        FOUND_SNAPSHOTS.forEach((shot, idx) => {
+            let opt = document.createElement('option');
+            opt.value = idx;
+            let day = shot.time > 1000 ? (shot.time/1000/86400).toFixed(1) : shot.time;
+            opt.innerText = `Снимок #${idx+1} (Day ${day})`;
+            sel.appendChild(opt);
+        });
+
+        sel.disabled = false;
+        
+        if (FOUND_SNAPSHOTS.length > 0) {
+            sel.selectedIndex = FOUND_SNAPSHOTS.length - 1;
+            renderState(FOUND_SNAPSHOTS[FOUND_SNAPSHOTS.length - 1].data);
+        }
+
+        sel.onchange = () => {
+            renderState(FOUND_SNAPSHOTS[sel.value].data);
+        };
+    }
+
+    function renderState(state) {
+        let owners = {}; 
+        let morales = {};
+        
+        let pList = [];
+        if (state.provinces) {
+            pList = Array.isArray(state.provinces) ? state.provinces : Object.values(state.provinces);
+        } else if (state.mapInfo) {
+            // Old format support
+            let oldOwners = state.mapInfo.owner;
+            for(let pid in oldOwners) owners[String(pid)] = String(oldOwners[pid]);
+            let mArr = decode(state.mapInfo.morale);
+            mArr.forEach((v, i) => morales[String(i)] = v);
+        }
+
+        // --- NEW PARSING LOGIC ---
+        pList.forEach(p => {
+            if (!p) return;
+            // ID: 'id' or 'province_id'
+            let rawId = (p.id !== undefined) ? p.id : p.province_id;
+            if (rawId === undefined) return;
+            
+            let provIdStr = String(rawId);
+            
+            // OWNER: 'ownerID', 'ownerId', or 'o'
+            let rawOwner = undefined;
+            if (p.ownerID !== undefined) rawOwner = p.ownerID;
+            else if (p.ownerId !== undefined) rawOwner = p.ownerId;
+            else if (p.o !== undefined) rawOwner = p.o;
+            
+            if (rawOwner !== undefined) owners[provIdStr] = String(rawOwner);
+
+            // MORALE: 'morale' or 'm'
+            let rawMorale = undefined;
+            if (p.morale !== undefined) rawMorale = p.morale;
+            else if (p.m !== undefined) rawMorale = p.m;
+            
+            if (rawMorale !== undefined) {
+                // Если > 1, значит это проценты (35 -> 35%)
+                // Если <= 1, значит это дробь (0.35 -> 35%)
+                // НО: у вас пример 35. Это проценты.
+                if (rawMorale <= 1.0 && rawMorale > 0) rawMorale *= 100;
+                morales[provIdStr] = rawMorale;
+            }
+        });
+
+        const stats = {};
+
+        REGIONS.forEach(reg => {
+            const pid = String(reg.id);
+            const oid = owners[pid];
+            
+            let p = GLOBAL_PLAYERS[oid];
+            
+            let tid = 0;
+            let name = "Neutral / AI";
+            let isBot = true;
+
+            if (p) {
+                tid = p.teamID || 0;
+                name = p.name || p.nationName || p.login || `ID:${oid}`;
+                if (p.computer != 1) isBot = false;
+                else name += " (Bot)";
+            } else if (oid) {
+                name = `ID:${oid}`;
+            }
+
+            if (!isBot && tid == 0 && oid != "0" && oid != undefined) tid = 99;
+
+            let res = reg.resource || "-";
+            if(res === 'metal') res = 'iron';
+            let mult = reg.multiplier || 1;
+            let mor = morales[pid] || 0;
+            
+            paintRegion(pid, tid, name, res, mor, oid);
+            
+            if (tid > 0 && res !== '-') {
+                let key = tid;
+                if (!stats[key]) {
+                    stats[key] = {
+                        name: (tid==1?"Team 1":(tid==2?"Team 2":"Players")),
+                        inc: {grain:0, fish:0, iron:0, wood:0, oil:0, coal:0, gas:0},
+                        slot: {grain:0, fish:0, iron:0, wood:0, oil:0, coal:0, gas:0}
+                    };
+                }
+                stats[key].inc[res] += (mult * mor); // 35 морали * множитель
+                stats[key].slot[res] += mult;
+            }
+        });
+        
+        drawTables(stats);
+    }
+
+    function paintRegion(pid, tid, name, res, mor, oid) {
+        const el = document.getElementById('province-' + pid);
+        if (!el) return;
+        
+        let c = COLORS.n;
+        if (tid == 1) c = COLORS[1];
+        else if (tid == 2) c = COLORS[2];
+        else if (tid == 99) c = COLORS.h;
+
+        el.style.fill = c;
+        
+        el.onmouseenter = () => {
+            const tt = document.getElementById('tooltip');
+            tt.style.display = 'block';
+            tt.style.borderColor = c;
+            
+            document.getElementById('tt-owner').innerText = name;
+            document.getElementById('tt-owner').style.color = c;
+            document.getElementById('tt-id').innerText = pid;
+            document.getElementById('tt-oid').innerText = oid || 0;
+            document.getElementById('tt-team').innerText = tid == 99 ? "-" : tid;
+            document.getElementById('tt-res').innerText = res.toUpperCase();
+            document.getElementById('tt-mor').innerText = Math.round(mor) + '%';
+        };
+        
+        el.onmouseleave = () => { document.getElementById('tooltip').style.display = 'none'; };
+    }
+
+    function drawTables(stats) {
+        const t1 = document.querySelector('#t-inc tbody');
+        const t2 = document.querySelector('#t-slot tbody');
+        t1.innerHTML = ''; t2.innerHTML = '';
+        
+        [1, 2, 99].forEach(id => {
+            if (!stats[id]) return;
+            const s = stats[id];
+            
+            let cls = (id==1?'c1':(id==2?'c2':'ch'));
+            
+            t1.innerHTML += `<tr>
+                <td class="${cls}">${s.name}</td>
+                <td>${Math.round(s.inc.grain)}</td><td>${Math.round(s.inc.fish)}</td>
+                <td>${Math.round(s.inc.iron)}</td><td>${Math.round(s.inc.wood)}</td>
+                <td>${Math.round(s.inc.oil)}</td><td>${Math.round(s.inc.coal)}</td>
+                <td>${Math.round(s.inc.gas)}</td>
+            </tr>`;
+            
+            t2.innerHTML += `<tr>
+                <td class="${cls}">${s.name}</td>
+                <td>${s.slot.grain + s.slot.fish}</td>
+                <td>${s.slot.iron + s.slot.wood}</td>
+                <td>${s.slot.oil + s.slot.coal + s.slot.gas}</td>
+            </tr>`;
+        });
+    }
+
+    function fixSvg() {
+        const s = document.querySelector('svg');
+        if(!s) return;
+        s.setAttribute('width','100%'); s.setAttribute('height','100%');
+        if(!s.hasAttribute('viewBox')) {
+            try { const b = s.getBBox(); if(b.width>0) s.setAttribute('viewBox', `${b.x} ${b.y} ${b.width} ${b.height}`); } catch(e) {}
+        }
+    }
+    
+    function decode(b64) {
+        if(!b64) return [];
+        try {
+            const s = atob(b64);
+            const a = new Uint8Array(s.length);
+            for(let i=0; i<s.length; i++) a[i] = s.charCodeAt(i);
+            return a;
+        } catch(e) { return []; }
+    }
+</script>
+</body>
+</html>
